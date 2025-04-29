@@ -1,163 +1,324 @@
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { ArrowRight, Home, Mountain, Landmark, User } from "lucide-react";
-import ProjectCard from "@/components/ProjectCard";
-import ServiceCard from "@/components/ServiceCard";
 
-const projects = [
-  {
-    id: "1",
-    title: "Дом у горного озера",
-    description: "Экологичный дом с панорамными окнами, построенный из натуральных материалов в труднодоступном районе горного озера.",
-    imageUrl: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=800&auto=format&fit=crop",
-    location: "Алтайский край"
-  },
-  {
-    id: "2",
-    title: "Автономная исследовательская станция",
-    description: "Станция с полным комплексом жизнеобеспечения для ученых, работающих вдали от цивилизации.",
-    imageUrl: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=800&auto=format&fit=crop",
-    location: "Карелия"
-  },
-  {
-    id: "3",
-    title: "Резиденция в лесу",
-    description: "Современный дом, интегрированный в лесной ландшафт, с минимальным воздействием на экосистему.",
-    imageUrl: "https://images.unsplash.com/photo-1520608760-eff2c44a1d49?q=80&w=800&auto=format&fit=crop",
-    location: "Ленинградская область"
-  }
-];
-
-const services = [
-  {
-    icon: <Home size={24} />,
-    title: "Строительство домов",
-    description: "Проектирование и строительство уникальных домов в отдаленных и труднодоступных местах."
-  },
-  {
-    icon: <Mountain size={24} />,
-    title: "Автономные здания",
-    description: "Создание полностью автономных построек с независимыми системами энергоснабжения и жизнеобеспечения."
-  },
-  {
-    icon: <Landmark size={24} />,
-    title: "Коммерческие объекты",
-    description: "Строительство нестандартных коммерческих объектов вдали от городской черты."
-  }
-];
+import { useState, useRef } from 'react';
+import { ArrowLeft, ArrowRight, MapPin, Star, Users, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 const Index = () => {
+  // Для плавного скролла к разделу
+  const contactRef = useRef<HTMLDivElement>(null);
+  const scrollToContact = () => {
+    contactRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Для формы обратной связи
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    message: ''
+  });
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // В реальном проекте здесь будет отправка данных на сервер
+    alert('Форма отправлена успешно!');
+    setFormData({ name: '', phone: '', email: '', message: '' });
+  };
+
+  // Проекты
+  const projects = [
+    {
+      id: 1,
+      title: 'Горное шале',
+      description: 'Уединенный дом для IT-предпринимателя с панорамными окнами и солнечными батареями',
+      image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      client: 'Алексей, 35 лет',
+      features: ['Автономное энергоснабжение', 'Домашний офис', 'Панорамные окна']
+    },
+    {
+      id: 2,
+      title: 'Лесная резиденция',
+      description: 'Современный дом среди леса для дизайнера с мастерской и большой террасой',
+      image: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      client: 'Мария, 29 лет',
+      features: ['Творческая мастерская', 'Естественное освещение', 'Эко-материалы']
+    },
+    {
+      id: 3,
+      title: 'Озерная станция',
+      description: 'Исследовательская станция на берегу горного озера для ученого-биолога',
+      image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      client: 'Дмитрий, 42 года',
+      features: ['Лаборатория', 'Системы наблюдения', 'Причал']
+    }
+  ];
+
+  // Услуги
+  const services = [
+    {
+      id: 1,
+      title: 'Индивидуальное проектирование',
+      description: 'Создаем уникальный проект, учитывая ваш образ жизни, предпочтения и окружающую среду',
+      icon: <Users className="h-10 w-10 text-forest" />,
+      price: 'от 150 000 ₽'
+    },
+    {
+      id: 2,
+      title: 'Строительство эко-домов',
+      description: 'Возводим дома из экологичных материалов с минимальным воздействием на природу',
+      icon: <MapPin className="h-10 w-10 text-forest" />,
+      price: 'от 3 500 000 ₽'
+    },
+    {
+      id: 3,
+      title: 'Автономные коммуникации',
+      description: 'Устанавливаем системы альтернативной энергетики и водоснабжения для полной независимости',
+      icon: <Zap className="h-10 w-10 text-forest" />,
+      price: 'от 800 000 ₽'
+    },
+    {
+      id: 4,
+      title: 'Реализация нестандартных проектов',
+      description: 'Исследовательские станции, творческие резиденции, стеклянные дома на склонах',
+      icon: <Star className="h-10 w-10 text-forest" />,
+      price: 'по запросу'
+    }
+  ];
+
   return (
-    <div>
-      {/* Секция герой */}
-      <section className="relative py-20 overflow-hidden">
-        {/* Декоративные фигуры */}
-        <div className="hero-shape bg-forest/30 w-96 h-96 left-[-100px] top-[-50px]"></div>
-        <div className="hero-shape bg-sunlight/30 w-64 h-64 right-[-30px] bottom-[20%]"></div>
-        <div className="hero-shape bg-earth/30 w-80 h-80 left-[30%] bottom-[-100px]"></div>
-        
-        <div className="container mx-auto text-center relative">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 max-w-4xl mx-auto">
-            Нестандартная недвижимость в уникальных местах
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Строим особенные дома для особенных людей в самых живописных и труднодоступных уголках природы
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg">
-              <Link to="/services">Наши услуги</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link to="/services#contact">Связаться с нами</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+    <div className="space-y-20 pb-20">
+      {/* Героический раздел */}
+      <section className="relative pt-16 pb-20 overflow-hidden">
+        {/* Фоновые фигуры */}
+        <div className="hero-shape bg-forest w-96 h-96 top-20 -right-48 opacity-10"></div>
+        <div className="hero-shape bg-sunlight w-80 h-80 top-40 -left-40 opacity-10"></div>
+        <div className="hero-shape bg-earth w-60 h-60 bottom-0 right-20 opacity-10"></div>
 
-      {/* Секция с проектами */}
-      <section className="py-16 bg-muted/50">
-        <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h2 className="text-3xl font-bold">Наши проекты</h2>
-              <p className="text-muted-foreground">Уникальные объекты, которыми мы гордимся</p>
-            </div>
-            <Button asChild variant="ghost" className="hidden sm:flex">
-              <Link to="/services" className="flex items-center gap-1">
-                Все проекты <ArrowRight size={16} />
-              </Link>
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map(project => (
-              <ProjectCard key={project.id} {...project} />
-            ))}
-          </div>
-          
-          <div className="mt-8 flex justify-center sm:hidden">
-            <Button asChild>
-              <Link to="/services">Все проекты</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Секция с услугами */}
-      <section className="py-16">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Наши услуги</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Мы предлагаем комплексный подход к созданию уникальных объектов недвижимости, адаптированных под ваши потребности
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Нестандартная недвижимость для выдающихся людей
+            </h1>
+            <p className="text-xl mb-8 text-muted-foreground">
+              Создаем уникальные постройки в труднодоступных местах для тех, 
+              кто ищет гармонию с природой и собственным призванием
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {services.map((service, index) => (
-              <ServiceCard key={index} {...service} />
-            ))}
-          </div>
-          
-          <div className="mt-10 text-center">
-            <Button asChild size="lg">
-              <Link to="/services">Подробнее об услугах</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Секция о нас */}
-      <section className="py-16 bg-earth/10">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h2 className="text-3xl font-bold mb-4">Для кого мы строим</h2>
-              <p className="text-muted-foreground mb-4">
-                Наши заказчики — нестандартные люди в возрасте 25-45 лет, ценящие индивидуальность, 
-                свободу и жизнь вдали от городской суеты.
-              </p>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="bg-forest rounded-full p-3 text-white">
-                  <User size={24} />
-                </div>
-                <div>
-                  <h3 className="font-medium">Индивидуальный подход</h3>
-                  <p className="text-sm text-muted-foreground">Мы вкладываем в каждый проект индивидуальные черты заказчика</p>
-                </div>
-              </div>
-              <Button asChild>
-                <Link to="/services#contact">Стать нашим клиентом</Link>
+            <div className="flex flex-wrap gap-4">
+              <Button size="lg" onClick={scrollToContact}>
+                Воплотить мечту
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <a href="#projects">Наши работы</a>
               </Button>
             </div>
-            <div className="rounded-lg overflow-hidden shadow-lg">
+          </div>
+        </div>
+      </section>
+
+      {/* Наши проекты */}
+      <section id="projects" className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold mb-10 text-center">Уникальные проекты</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {projects.map((project) => (
+            <Card key={project.id} className="overflow-hidden group hover:shadow-lg transition-shadow">
+              <div className="h-56 overflow-hidden">
+                <img 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <CardContent className="p-6">
+                <h3 className="font-bold text-xl mb-2">{project.title}</h3>
+                <p className="text-muted-foreground mb-2">{project.description}</p>
+                <div className="mb-4">
+                  <span className="inline-block bg-forest/10 text-forest rounded-full px-3 py-1 text-sm">
+                    {project.client}
+                  </span>
+                </div>
+                <ul className="space-y-1">
+                  {project.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm">
+                      <span className="w-1.5 h-1.5 bg-sunlight rounded-full"></span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Наши услуги */}
+      <section className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold mb-2 text-center">Наши услуги</h2>
+        <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
+          Полный цикл от разработки концепции до обслуживания готового объекта
+        </p>
+
+        <Carousel className="w-full">
+          <CarouselContent>
+            {services.map((service) => (
+              <CarouselItem key={service.id} className="md:basis-1/2 lg:basis-1/3">
+                <Card className="h-full border-0 shadow-md hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6 flex flex-col h-full">
+                    <div className="mb-4 flex justify-center">
+                      {service.icon}
+                    </div>
+                    <h3 className="font-bold text-xl mb-2 text-center">{service.title}</h3>
+                    <p className="text-muted-foreground text-center flex-grow">{service.description}</p>
+                    <div className="mt-4 text-center font-semibold text-forest">
+                      {service.price}
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2">
+            <CarouselPrevious />
+          </div>
+          <div className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2">
+            <CarouselNext />
+          </div>
+        </Carousel>
+
+        <div className="flex md:hidden justify-center mt-6 gap-2">
+          <Button variant="outline" size="icon">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon">
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </section>
+
+      {/* О нас */}
+      <section className="bg-muted py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2 className="text-3xl font-bold mb-6">О нашей компании</h2>
+              <p className="mb-4">
+                Мы создаем нестандартные постройки в труднодоступных местах для людей, 
+                которые ценят связь с природой и индивидуальность.
+              </p>
+              <p className="mb-4">
+                Наша команда состоит из архитекторов, инженеров и строителей, которые 
+                разделяют страсть к необычным проектам и инновационным решениям.
+              </p>
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-sunlight rounded-full"></span>
+                  <span>10+ лет опыта в нестандартном строительстве</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-sunlight rounded-full"></span>
+                  <span>Более 50 реализованных проектов по всей России</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-sunlight rounded-full"></span>
+                  <span>Экологичные и энергоэффективные решения</span>
+                </li>
+              </ul>
+            </div>
+            <div className="relative">
+              <div className="absolute w-40 h-40 bg-sunlight rounded-full top-0 -left-5 opacity-20"></div>
+              <div className="absolute w-60 h-60 bg-forest rounded-full bottom-10 right-10 opacity-10"></div>
               <img 
-                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800&auto=format&fit=crop" 
-                alt="Современный дом в лесу" 
-                className="w-full h-auto"
+                src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                alt="Уникальный дом" 
+                className="w-full h-80 md:h-96 object-cover rounded-lg relative z-10"
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Форма связи */}
+      <section ref={contactRef} id="contact" className="container mx-auto px-4">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold mb-2 text-center">Связаться с нами</h2>
+          <p className="text-center text-muted-foreground mb-8">
+            Расскажите нам о своей мечте, и мы поможем воплотить её в реальность
+          </p>
+
+          <Card>
+            <CardContent className="p-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className="block mb-2 text-sm font-medium">
+                      Ваше имя
+                    </label>
+                    <Input 
+                      id="name" 
+                      name="name" 
+                      placeholder="Иван Иванов" 
+                      value={formData.name}
+                      onChange={handleFormChange}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block mb-2 text-sm font-medium">
+                      Телефон
+                    </label>
+                    <Input 
+                      id="phone" 
+                      name="phone" 
+                      placeholder="+7 (900) 123-45-67" 
+                      value={formData.phone}
+                      onChange={handleFormChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium">
+                    Email
+                  </label>
+                  <Input 
+                    id="email" 
+                    name="email" 
+                    type="email" 
+                    placeholder="ivanov@example.com" 
+                    value={formData.email}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="message" className="block mb-2 text-sm font-medium">
+                    Сообщение
+                  </label>
+                  <Textarea 
+                    id="message" 
+                    name="message" 
+                    placeholder="Расскажите о своем проекте..." 
+                    rows={5}
+                    value={formData.message}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full">
+                  Отправить заявку
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
